@@ -88,7 +88,7 @@ void loop() {
   if (is_card_present(rfid_sens))
   {
     card_present = true;
-    Serial.println("Card present..");
+    //Serial.println("Card present..");
     digitalWrite(LED_PIN, HIGH);
   }
   else
@@ -100,26 +100,33 @@ void loop() {
   ping_dist_cm = ping_get_distance_cm();
   ir_proximity = ir_get_proximity();
 
-  Serial.print(count);
-  Serial.print(" - ");
+  //Serial.print(count);
+  //Serial.print(" - ");
   Serial.print(temp_c);
-  Serial.print(", ");
+  Serial.print(",");
   Serial.print(pressure_pa);
-  Serial.print(", ");
+  Serial.print(",");
   Serial.print(humidity_percent);
-  Serial.print(", R: ");
+  //Serial.print(", R: ");
+  Serial.print(",");
   Serial.print(red);
-  Serial.print(", G: ");
+  //Serial.print(", G: ");
+  Serial.print(",");
   Serial.print(green);
-  Serial.print(", B: ");
+  //Serial.print(", B: ");
+  Serial.print(",");
   Serial.print(blue);
-  Serial.print(", C: ");
+  Serial.print(",");
+  //Serial.print(", C: ");
   Serial.print(clear_light);
-  Serial.print(", RFID: ");
+  //Serial.print(", RFID: ");
+  Serial.print(",");
   Serial.print(card_present);
-  Serial.print(", PING: ");
+  //Serial.print(", PING: ");
+  Serial.print(",");
   Serial.print(ping_dist_cm);
-  Serial.print(", IR: ");
+  //Serial.print(", IR: ");
+  Serial.print(",");
   Serial.print(ir_proximity);
   Serial.println("");
   count++;
