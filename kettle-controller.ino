@@ -3,6 +3,7 @@
 #include <MFRC522.h>
 #include <Adafruit_BME280.h>
 #include <Adafruit_TCS34725.h>
+#include <Servo.h>
 
 #define SS_PIN 10
 #define RST_PIN 9
@@ -15,10 +16,15 @@
 #define IR_D_PIN A3
 #define IR_A_PIN A2
 
+#define SERVO_PIN 6
+
 MFRC522 rfid_sens(SS_PIN, RST_PIN);
 Adafruit_BME280 TPH_sens;
 float temp_c, pressure_pa, humidity_percent;
 Adafruit_TCS34725 RGB_sens;
+
+Servo boil_switch;
+
 uint16_t red, green, blue, clear_light;
 
 float ping_dist_cm;
@@ -62,9 +68,25 @@ uint16_t ir_get_proximity()
   }
 }
 
+void flick_boil_switch(Servo boil_servo)
+{
+  int pos;
+  for (pos = 90; pos >= 30; pos -= 1) { // goes from 180 degrees to 0 degrees
+    boil_servo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+  }
+
+  for (pos = 30; pos <= 90; pos += 1) { // goes from 0 degrees to 180 degrees
+    // in steps of 1 degree
+    boil_servo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+  }
+}
+
 void setup() {
   unsigned int TBH_status, RGB_status;
   Serial.begin(9600);
+  Serial.println("Booting..");
   pinMode(LED_PIN, OUTPUT);
 
   SPI.begin();
@@ -76,6 +98,8 @@ void setup() {
 
   pinMode(PING_TRIG_PIN, OUTPUT);
   pinMode(PING_ECHO_PIN, INPUT);
+
+  boil_switch.attach(SERVO_PIN);
 }
 
 void loop() {
@@ -129,6 +153,16 @@ void loop() {
   Serial.print(",");
   Serial.print(ir_proximity);
   Serial.println(";");
+
+  if (Serial.available() > 0)
+  {
+    byte cmd = Serial.read();
+    if (cmd == 'B')
+    {
+      flick_boil_switch(boil_switch);
+    }
+  }
+
   count++;
   delay(50);
 }
