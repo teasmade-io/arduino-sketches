@@ -128,7 +128,7 @@ void loop() {
   //Serial.print(", IR: ");
   Serial.print(",");
   Serial.print(ir_proximity);
-  Serial.println("");
+  Serial.println(";");
   count++;
   delay(50);
 }
